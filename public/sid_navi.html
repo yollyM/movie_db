@@ -4,6 +4,7 @@
 <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     
     
 <style>
@@ -52,10 +53,14 @@
 }
 #side_navi_button{
  position : absolute;
-	top : 0px;
+	top : 4%;
 	right : 0px;
     width:25%;
-    height:4%;
+    height:10%;
+    border-radius:0px;
+    border-top:1px dashed white;
+    border-bottom:1px dashed white;
+    font-size:2em;
     
 }
 
@@ -73,7 +78,7 @@
   <a href="#">Search</a>
 </div>
 
-<button id ="side_navi_button" onclick="openNav()">
+<button id ="side_navi_button" onclick="openNav()" class="btn btn-primary">
 Movies menu</button>
     
 
