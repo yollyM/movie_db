@@ -3,7 +3,7 @@ var server = http.createServer();
 var url = require("url");
 var file_system = require("fs");
 var my_sql = require("mysql");
-//* remote
+/* remote
 var my_sql_conn = my_sql.createConnection({
                     host : "www.db4free.net",
                     port : 3306,
@@ -19,10 +19,10 @@ var my_sql_conn_db = my_sql.createConnection({
                     password : '12345678',
                     database : "movie_shop"
 });
-//*/
+*/
 //local
 //establish connection to db server
-/*
+//*
 var my_sql_conn = my_sql.createConnection({
                     host : "localhost",
                     port : 3306,
@@ -38,7 +38,7 @@ var my_sql_conn_db = my_sql.createConnection({
                     password : '',
                     database : "movie_shop"
 });
-*/
+//*/
 
 
 var style = '<style>#home_container{width:25%;height:5%;}#home_container input{width:25%;height:10%;border-radius:0px;border-top:1px dashed white;border-bottom:1px dashed white; font-size:2em}</style>';
@@ -115,6 +115,9 @@ server.on("request",function(request, respond){
     }
     if(path == '/data_update_to_db'){//show all movies on db
         data_update_to_db(url_query, respond);
+    }
+    if(path == '/delete_all'){//show all movies on db
+        delete_all(url_query, respond);
     }
     else{//path is unknown
    // respond.write("<script>document.getElementById('heading').innerHTML ='Incorrect url';</script>")
@@ -195,19 +198,19 @@ function home_page(respond){
 function routing(respond){
     respond.write("<script>document.getElementById('heading').innerHTML ='SQL db& table create';</script>")
     my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
-        if(err){
+       if(err){
            // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
-           respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connected to db</p>");
+          // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connected to db</p>");
              //respond.end();//ending here
         }
     //create database give a name;
        my_sql_conn.query("CREATE DATABASE movie_shop",function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>DB creation err "+err+"</p>");
+        //    respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>DB creation err "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -224,7 +227,7 @@ function routing(respond){
         my_sql_conn_db.query(mysql_db_table, function(err, results){
            
         if(err){
-        respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>table creation err "+err+"</p>");
+       // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>table creation err "+err+"</p>");
            return;// respond.write();//ending here
         }
         else{
@@ -261,7 +264,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='DB Add dat
     //add data to db table
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+          //  respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -278,7 +281,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='DB Add dat
         my_sql_conn_db.query(mysql_db_data_add, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(write to db) "+err+"</p>");
+          //  respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(write to db) "+err+"</p>");
            return ;//respond.end();//ending here
         }
         else{
@@ -300,12 +303,13 @@ function movie_find(url_query, respond){
     
     respond.write("<script>document.getElementById('heading').innerHTML ='Movie search';</script>");
     
-    var search_input ='<style>input[type=search] {width: 130px;box-sizing: border-box;border: 2px solid #ccc;border-radius: 4px;font-size: 16px;background-color: white;  margin:2% auto 2% 40%;background-image:url("searchicon.png");background-position: 10px 10px;background-repeat: no-repeat;padding: 12px 20px 12px 40px;-webkit-transition: width 0.4s ease-in-out;transition: width 0.4s ease-in-out;}input[type=search]:focus {width: 95%;margin:2% auto 2% auto;}/* #searh_input{margin:2% auto 2% 40%;width: 50%;} */</style><input type="search" name="search" placeholder="Search.." id="search_input" onsearch ="call_db_search()"><button onclick="call_db_search()" style ="width:4%; height:7.5%;font-size:2.3em;border-radius:0px;background-color:transparent;" class="btn btn-info"><i class="fas fa-search"></i></button><br><hr><div id style="width:100%;height:7%;background-color:white;color:black;font-size:1em;"><a href="movie_find_show_all" onclick ="">Show all stored movies</a></div><hr><script> function call_db_search(){ var search_query = document.getElementById("search_input"); if(search_query.value == ""){ document.getElementById("heading").innerHTML ="Please feel data to be searched for";  }  else{            window.open("movie_find_search?"+search_query.value, "_self");       }    }   </script>';
+    var search_input ='<style>input[type=search] {width: 130px;box-sizing: border-box;border: 2px solid #ccc;border-radius: 4px;font-size: 16px;background-color: white;  margin:2% auto 2% 40%;background-image:url("searchicon.png");background-position: 10px 10px;background-repeat: no-repeat;padding: 12px 20px 12px 40px;-webkit-transition: width 0.4s ease-in-out;transition: width 0.4s ease-in-out;}input[type=search]:focus {width: 95%;margin:2% auto 2% auto;}/* #searh_input{margin:2% auto 2% 40%;width: 50%;} */</style><input type="search" name="search" placeholder="Search.." id="search_input" onsearch ="call_db_search()"><button onclick="call_db_search()" style ="width:4%; height:7.5%;font-size:2.3em;border-radius:0px;background-color:transparent;" class="btn btn-info"><i class="fas fa-search"></i></button><br><hr><div id style="width:100%;height:7%;background-color:white;color:black;font-size:1em;"><a href="movie_find_show_all" onclick ="">Show all stored movies</a><br><a href="delete_all" onclick ="">Delete all stored movies</a></div><hr><script> function call_db_search(){ var search_query = document.getElementById("search_input"); if(search_query.value == ""){ document.getElementById("heading").innerHTML ="Please feel data to be searched for";  }  else{            window.open("movie_find_search?"+search_query.value, "_self");       }    }   </script>';
 
     respond.write(search_input);
+   // respond.write('<button onclick ="delete_all">Delete all</button>');
     
 }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//edited only take as is mysql_db_data_get copy paste, can get spacing issues ********************
 //search movie
 
 function movie_find_search(url_query, respond){
@@ -323,7 +327,7 @@ var data_to_search = url_query.replace(/%20/g, " ");
     //get data from db
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+        //    respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -333,7 +337,7 @@ var data_to_search = url_query.replace(/%20/g, " ");
          
         //get data from db
             //multiple row search
-        var mysql_db_data_get =  "SELECT * FROM movie_table WHERE m_title='"+data_to_search+"' OR m_director='"+data_to_search+"' OR m_producer='"+data_to_search+"' OR m_production_company='"+data_to_search+"' OR m_country='"+data_to_search+"' OR m_actor='"+data_to_search+"' OR m_genre='"+data_to_search+"' OR m_description='"+data_to_search+"' OR m_disclaimer='"+data_to_search+"'";
+        var mysql_db_data_get =  "SELECT * FROM movie_table WHERE m_title like '%"+data_to_search+"%' OR m_director like '%"+data_to_search+"%' OR m_producer like '%"+data_to_search+"%' OR m_production_company like '%"+data_to_search+"%' OR m_country like '%"+data_to_search+"%' OR m_actor like '%"+data_to_search+"%' OR m_genre like '%"+data_to_search+"%' OR m_description like '%"+data_to_search+"%' OR m_disclaimer like '%"+data_to_search+"%' ";
             
        
         //connect to existing db
@@ -341,7 +345,7 @@ var data_to_search = url_query.replace(/%20/g, " ");
         my_sql_conn_db.query(mysql_db_data_get, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data connection error : "+err+"</p>");
+        //    respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data connection error : "+err+"</p>");
            return ;//respond.end();//ending here
         }
         else{
@@ -389,7 +393,7 @@ function movie_find_show_all(url_query, respond){
         //get data from db
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -406,7 +410,7 @@ function movie_find_show_all(url_query, respond){
         my_sql_conn_db.query(mysql_db_data_get, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err (serach) "+err+"</p>");
+          //  respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err (serach) "+err+"</p>");
            return ;//respond.end();//ending here
         }
         else{
@@ -449,7 +453,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Movie dele
      //get data from db
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+         //   respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -466,7 +470,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Movie dele
         my_sql_conn_db.query(mysql_db_data_get, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data delete err "+err+"</p>");
+        //    respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data delete err "+err+"</p>");
            return ;//respond.end();//ending here
         }
         else{
@@ -514,7 +518,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Movie upda
         //get data from db
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+          //  respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -531,7 +535,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Movie upda
         my_sql_conn_db.query(mysql_db_data_get, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err (movie update)"+err+"</p>");
+         //   respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err (movie update)"+err+"</p>");
            return;// respond.end();//ending here
         }
         else{
@@ -576,7 +580,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Updating D
     //add data to db table
         my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+         //   respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
             //return respond.end();//ending here
         }
         else{
@@ -593,7 +597,7 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Updating D
         my_sql_conn_db.query(mysql_db_data_add, function(err, results){
            
         if(err){
-            respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(update write) "+err+"</p>");
+          //  respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(update write) "+err+"</p>");
            return ;//respond.end();//ending here
         }
         else{
@@ -613,12 +617,89 @@ respond.write("<script>document.getElementById('heading').innerHTML ='Updating D
     function load_all_movies(){//call movie load all
         
         movie_find_show_all(url_query, respond);
-    }
-    
-    
-    
-    
+    }    
 }
+//**************************************************************************//edited ready to export all******
+ function delete_all(url_query, respond){
+     
+     respond.write("<script>document.getElementById('heading').innerHTML ='Delete all movies';</script>");
+     
+     
+     
+     my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
+        if(err){
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+            //return respond.end();//ending here
+        }
+        else{
+           // respond.write("<p>connected to db</p>");
+             //respond.end();//ending here
+        }
+         //delete table
+        var mysql_db_table_delete ="DROP TABLE movie_table";    
+            
+       // console.log(mysql_db_data_add);
+            //connect to existing db
+            
+        my_sql_conn_db.query(mysql_db_table_delete, function(err, results){
+           
+        if(err){
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(update write) "+err+"</p>");
+           return ;//respond.end();//ending here
+        }
+        else{
+            console.log(JSON.stringify(results));
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data added "+JSON.stringify(results)+"</p>");
+           // respond.write("<script>alert('Movie deleted')</script>");
+           create_new_table();
+        }
+           
+       }
+           
+        );             
+            
+        });
+     
+     function create_new_table(){//create new empty table structure after delete
+         
+            my_sql_conn.connect(function(err){//doing mysql connection handshake aka test connectability
+        if(err){
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>connection error: "+err+"</p>");
+            //return respond.end();//ending here
+        }
+        else{
+           // respond.write("<p>connected to db</p>");
+             //respond.end();//ending here
+        }
+         //delete table
+        var mysql_db_create_new_table ="CREATE TABLE movie_table (movie_id int NOT NULL AUTO_INCREMENT PRIMARY KEY, m_title varchar(255), m_director varchar(255), m_producer varchar(255), m_production_company varchar(255), m_country varchar(255), m_actor varchar(255), m_genre varchar(255), m_description varchar(255), m_disclaimer varchar(255))";
+            
+       // console.log(mysql_db_data_add);
+            //connect to existing db
+            
+        my_sql_conn_db.query(mysql_db_create_new_table, function(err, results){
+           
+        if(err){
+           // respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Data adding err(update write) "+err+"</p>");
+           return ;//respond.end();//ending here
+        }
+        else{
+          //  console.log(JSON.stringify(results));
+           respond.write("<p style='width:100%;height:10%;overflow:auto;background-color:white;color:black'>Table deleted</p>");
+           // respond.write("<script>alert('Movie deleted')</script>");
+            
+        }
+           
+       }
+           
+        );             
+            
+        });  
+         
+         
+     }
+ }
+    
 
 
 //********************************************************
